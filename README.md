@@ -1,2 +1,2 @@
 # sap_automation
-Projects related to SAP Automation
+Personal Projects related to SAP Automation
