@@ -2,7 +2,16 @@ from tkinter import *
 import get_jobs_from_sap as jobslist
 import os, sys
 import datetime
+import data_reports as rpt
 
+
+def build_report():
+    if len(v_filepath.get()) == 0:
+        v_filepath.set(str(os.path.dirname(sys.argv[0])))
+    if len(v_filename.get()) == 0:
+        v_filename.set('JOBLIST_')
+
+    rpt.build_html_rpt(v_filepath.get(), v_filename.get())
 
 def get_jobs():
     if len(v_filepath.get()) == 0:
@@ -73,10 +82,15 @@ v_filename = StringVar()
 p_filename = Entry(window, textvariable=v_filename)
 p_filename.grid(row=1, column=3)
 
-btn_getjobs = Button(window, text='Get Jobs', width=12, command=get_jobs)
-btn_getjobs.grid(row=3, column=1)
+btn_getjobs = Button(window, text='Step 1: Get Jobs', width=17, command=get_jobs)
+btn_getjobs.grid(row=3, column=0)
 
-btn_getcanc = Button(window, text='Get Canceled', width=12, command=get_canceled)
-btn_getcanc.grid(row=3, column=2)
+btn_getcanc = Button(window, text='Step 2: Get Canceled', width=17, command=get_canceled)
+btn_getcanc.grid(row=3, column=1)
+
+
+btn_bldrpt = Button(window, text='Step 3: Build Report', width=17, command=build_report)
+btn_bldrpt.grid(row=3, column=2)
 
 window.mainloop()
+#--End | github.com/eabdiel

@@ -1,8 +1,11 @@
+#Notes: SM37 layout shouldnt include spool and jobdoc columns; recommended to change layout if report button is to
+#       be used.
+
+#Modules
 import pyautogui as pgui
 import time as t
 import pyperclip
 import datetime as DT
-#import os, sys
 import bs4
 import csv
 
@@ -12,12 +15,13 @@ def get_jobs(filepath, filename, username, serversid):
     pgui.hotkey("win")
     t.sleep(5)
     pgui.typewrite("SAP Logon")
+    t.sleep(1)
     pgui.hotkey("Enter")
     # give enough time for sap logon pad to open; default 5 seconds
-    t.sleep(3)
+    t.sleep(5)
     # after loading, press ctrl+f to go to search bar
     pgui.hotkey("ctrl", "f")
-    t.sleep(2)
+    t.sleep(3)
     backcounter = 0
     while backcounter < 10:
         pgui.hotkey("backspace")
@@ -34,20 +38,20 @@ def get_jobs(filepath, filename, username, serversid):
     pgui.typewrite(username)
     # submit a few times in case an informational popup appears
     entersleep = 0
-    while entersleep < 4:
+    while entersleep < 5:
         t.sleep(1)
         pgui.hotkey('enter')
         entersleep += 1
 
     # SAP Automation Steps start here ---
     pgui.hotkey('ctrl', '/')
-    t.sleep(1)
+    t.sleep(3)
     pgui.typewrite('/nsm37')
     pgui.hotkey('enter')
-    t.sleep(1)
+    t.sleep(3)
     pgui.typewrite('Z80*')
     pgui.hotkey('tab')
-    t.sleep(1)
+    t.sleep(3)
     pgui.typewrite('*')
     pgui.hotkey('tab')  # move from user name field
     pgui.hotkey('tab')  # move from shed field
@@ -64,7 +68,7 @@ def get_jobs(filepath, filename, username, serversid):
     # Start- Input Date formatting
     paste_date = pyperclip.paste()  # paste date in MMDDYYYY
     date = DT.datetime.strptime(paste_date, '%m/%d/%Y')  # convert to date object
-    minus_days = DT.timedelta(days=6)  # a day object to be used to substract from entry
+    minus_days = DT.timedelta(days=7)  # a day object to be used to substract from entry
     newdate = date - minus_days  # create a newdate object with entry date minus the days specified
     newdate_formatted = newdate.strftime('%m/%d/%Y')  # new formatted day should be pasted date - 6 days
     filenamedate = newdate.strftime('%m%d%Y')
@@ -120,6 +124,15 @@ def get_jobs(filepath, filename, username, serversid):
         data.append([ele for ele in cols if ele])
     # data here has the values from the table in the html
     # save this to csv for easier data analysis later
+    data[0].pop(1) #spool not needed
+    data[0].pop(1) #doc number not needed
+    data[0][0] = 'JobName'
+    data[0][1] = 'CreatedBy'
+    data[0][2] = 'Status'
+    data[0][3] = 'StartDate'
+    data[0][4] = 'StartTime'
+    data[0][5] = 'Duration'
+    data[0][6] = 'Delay'
     with open(f'{filename}{filenamedate}.txt', 'w', newline='') as fou:
         cw = csv.writer(fou)
         cw.writerows(data)
@@ -137,6 +150,15 @@ def error_logs(filepath, filename, username, serversid):
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         data.append([ele for ele in cols if ele])
+    data[0].pop(1)
+    data[0].pop(1)
+    data[0][0] = 'JobName'
+    data[0][1] = 'CreatedBy'
+    data[0][2] = 'Status'
+    data[0][3] = 'StartDate'
+    data[0][4] = 'StartTime'
+    data[0][5] = 'Duration'
+    data[0][6] = 'Delay'
     # data here has the values from the table in the html
     # save this to csv for easier data analysis later
     with open(f'{filename}.txt', 'w', newline='') as fou:
@@ -243,7 +265,7 @@ def error_logs(filepath, filename, username, serversid):
             pgui.hotkey('ctrl', 'a')
             t.sleep(1)
             path = filepath
-            pgui.typewrite(f'{path}/{filenamedate}')
+            pgui.typewrite(f'{path}/Job_Reports/Error_Logs/{filenamedate}')
             t.sleep(1)
             pgui.hotkey('tab')
             pgui.typewrite(f'{job_name}_{filenamedate}.html')
@@ -255,7 +277,7 @@ def error_logs(filepath, filename, username, serversid):
 
             # Data processing step here
             data = []
-            soup = bs4.BeautifulSoup(open(f'{filepath}/{filenamedate}/{job_name}_{filenamedate}.html'), 'html.parser')
+            soup = bs4.BeautifulSoup(open(f'{filepath}/Job_Reports/Error_Logs/{filenamedate}/{job_name}_{filenamedate}.html'), 'html.parser')
             table = soup.find('table', attrs={'class': 'list'})
             table_body = table.find('tbody')
             rows = table_body.find_all('tr')
@@ -265,7 +287,7 @@ def error_logs(filepath, filename, username, serversid):
                 data.append([ele for ele in cols if ele])
             # data here has the values from the table in the html
             # save this to csv for easier data analysis later
-            with open(f'{filepath}/{filenamedate}/{job_name}_{filenamedate}.txt', 'w', newline='') as fou:
+            with open(f'{filepath}/Job_Reports/Error_Logs/{filenamedate}/{job_name}_{filenamedate}.txt', 'w', newline='') as fou:
                 cw = csv.writer(fou)
                 cw.writerows(data)
         else:
