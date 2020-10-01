@@ -1,6 +1,8 @@
 # sap_automation
-Personal Projects related to SAP Automation
+Personal Projects related to SAP Automation -
+
 Required libs for automation: sys, win32com.client, pyautogui
+
 Required libs for data analysis: pandas, beautifulsoup4, seaborn, matplotlib
 
 1) AutomatedGetJob_Data_Analysis_Tool - UI to trigger pyautogui automation to fetch custom jobs for last week, extracting the data into html, converting the html to csv for easier-to-handle dataset and the option to iterate through the data set to extract each failed job's log into separate csv files, grouped by date and named according to job_date for easier analysis.  -- this automation program doesnt require SAP scripting to be enabled.
