@@ -93,7 +93,7 @@ def get_jobs(filepath, filename, username, serversid):
     pgui.hotkey('down')
     pgui.hotkey('enter')  # save to html
     t.sleep(1)
-    pgui.hotkey('up')
+    pgui.press('up')
     pgui.hotkey('ctrl', 'a')
     t.sleep(1)
     path = filepath
@@ -261,7 +261,7 @@ def error_logs(filepath, filename, username, serversid):
             pgui.hotkey('down')
             pgui.hotkey('enter')  # save to html
             t.sleep(1)
-            pgui.hotkey('up')
+            pgui.press('up')
             pgui.hotkey('ctrl', 'a')
             t.sleep(1)
             path = filepath
