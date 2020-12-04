@@ -68,11 +68,12 @@ def get_jobs(filepath, filename, username, serversid):
     # Start- Input Date formatting
     paste_date = pyperclip.paste()  # paste date in MMDDYYYY
     date = DT.datetime.strptime(paste_date, '%m/%d/%Y')  # convert to date object
-    minus_days = DT.timedelta(days=7)  # a day object to be used to substract from entry
+    minus_days = DT.timedelta(days=30)  # a day object to be used to substract from entry
     newdate = date - minus_days  # create a newdate object with entry date minus the days specified
     newdate_formatted = newdate.strftime('%m/%d/%Y')  # new formatted day should be pasted date - 6 days
     filenamedate = newdate.strftime('%m%d%Y')
     # End- Input Date formatting
+
 
     # Continue automation
     t.sleep(1)
@@ -92,14 +93,18 @@ def get_jobs(filepath, filename, username, serversid):
     pgui.hotkey('down')
     pgui.hotkey('down')
     pgui.hotkey('enter')  # save to html
-    t.sleep(1)
+    t.sleep(2)
+    pgui.press('right')
     pgui.press('up')
-    pgui.hotkey('ctrl', 'a')
     t.sleep(1)
+    pgui.hotkey('ctrl', 'a')
+    t.sleep(2)
     path = filepath
+    t.sleep(1)
     pgui.typewrite(path)
     t.sleep(1)
     pgui.hotkey('tab')
+    t.sleep(1)
     pgui.typewrite(f'{filename}{filenamedate}.html')
     t.sleep(1)
     pgui.hotkey('enter')
@@ -228,7 +233,7 @@ def error_logs(filepath, filename, username, serversid):
             pgui.hotkey('tab')  # move from ready field
             pgui.hotkey('space')  # clear active field
             pgui.hotkey('tab')  # move from active field
-            pgui.hotkey('space')  # clear finished field
+            #pgui.hotkey('space')  # clear finished field
             pgui.hotkey('tab')  # move from finished field
             pgui.hotkey('tab')  # move from cancelled field
             t.sleep(1)  # give a few seconds to ctrl - copy
@@ -243,7 +248,14 @@ def error_logs(filepath, filename, username, serversid):
             pgui.hotkey('ctrl', 'a')
             pgui.typewrite(start_date)
             pgui.hotkey('tab')
-            pgui.typewrite(start_time)
+            t.sleep(2)
+            # Input Time formatting
+            v_time = DT.datetime.strptime(start_time, '%H:%M:%S')
+            minus_second = DT.timedelta(seconds=1)
+            v_timeminusone = v_time - minus_second
+            v_start_time = v_timeminusone.strftime('%H:%M:%S')
+            # End - input time formatting
+            pgui.typewrite(v_start_time)
             pgui.hotkey('tab')
             pgui.typewrite(start_time)
             pgui.hotkey('f8')
@@ -260,8 +272,10 @@ def error_logs(filepath, filename, username, serversid):
             pgui.hotkey('down')
             pgui.hotkey('down')
             pgui.hotkey('enter')  # save to html
-            t.sleep(1)
+            t.sleep(2)
+            pgui.press('right')
             pgui.press('up')
+            t.sleep(1)
             pgui.hotkey('ctrl', 'a')
             t.sleep(1)
             path = filepath
