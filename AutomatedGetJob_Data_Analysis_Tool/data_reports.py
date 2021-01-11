@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 def build_html_rpt(filepath, filename):
 
     pd.set_option('display.max_columns', None)
-    #df = pd.read_csv('JOBLIST_09232020.csv', encoding='iso-8859-1', engine='python').sort_values(by=['Status', 'Start date', 'Start Time'])
-
-    df = pd.read_csv(f'{filepath}/{filename}.txt', encoding='utf-8', engine='python').sort_values(by=['Status', 'StartDate', 'StartTime'])
+    #df = pd.read_csv(f'{filepath}/{filename}.txt', encoding='iso-8859-1', engine='python').sort_values(by=['Status', 'Start date', 'Start Time'])
+    #df = pd.read_csv(f'{filepath}/{filename}.txt', encoding='utf-8', engine='python').sort_values(by=['Status', 'StartDate', 'StartTime'])
+    
+    #For windows files try using windows-1252 encoding - if it doesnt work, switch to one of the two above
+    df = pd.read_csv(f'{filepath}/{filename}.txt', encoding='windows-1252', engine='python').sort_values(by=['Status', 'StartDate', 'StartTime'])
 
     #Print list
     print(df.to_string())
